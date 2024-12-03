@@ -1,0 +1,162 @@
+#region using
+using System;
+using System.Text;
+using System.IO;
+using System.Collections.Generic;
+using AAA.Atributos.Imagem;
+using AAA.Atributos.GED;
+using AAA.Framework.Imagem;
+using AAA.Framework.Util;
+using System.Web.Script.Serialization;
+using AAA.Atributos.GED.TipoDocumento;
+using AAA.Framework.Log;
+using System.Net.Http;
+using System.Web.Script.Serialization;
+#endregion
+
+public class ClassePrincipal // 3A-Não alterar
+{
+    public string Main(AAAARegistro pRegistro, AAAATipoCampo pCampo) // 3A-Não alterar
+    {
+        string lRetorno = "";
+
+        try
+        {
+            AAAWLog lLog = new AAAWLog("Leitura de CNPJ", @"C:\3A Digitall\Log\cnpj.log");
+
+            string lCnpj = pRegistro.getCampo("CNPJ").Valor.Trim().Replace(".", "").Replace("-", "").Replace("/", "");
+
+            try
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(lCnpj))
+                    {
+                        lRetorno = "Por gentileza, insira um CNPJ válido.";
+                    }
+
+                    string lUrl = "https://www.receitaws.com.br/v1/cnpj/{0}" + lCnpj;
+
+                    using (HttpClient client = new HttpClient())
+                    {
+                        HttpResponseMessage resposta = client.GetAsync(lUrl).Result;
+
+                        if (resposta.IsSuccessStatusCode)
+                        {
+                            string json = resposta.Content.ReadAsStringAsync().Result;
+                            JavaScriptSerializer serializer = new JavaScriptSerializer();
+                            Dictionary<string, string> lCnpjDic = serializer.Deserialize<Dictionary<string, string>>(json);
+
+                            //Principais características
+                            pRegistro.getCampo("CNPJ_Abertura").Valor = lCnpjDic["abertura"];
+                            pRegistro.getCampo("CNPJ_Situacao").Valor = lCnpjDic["situacao"];
+                            pRegistro.getCampo("CNPJ_Tipo").Valor = lCnpjDic["tipo"];
+                            pRegistro.getCampo("CNPJ_Nome").Valor = lCnpjDic["nome"];
+                            pRegistro.getCampo("CNPJ_Porte").Valor = lCnpjDic["porte"];
+                            pRegistro.getCampo("CNPJ_NaturezaJuridica").Valor = lCnpjDic["naturza_juridica"];
+                            pRegistro.getCampo("CNPJ_NumeroCNPJ").Valor = lCnpjDic["cnpj"];
+
+                            //Endereço e demais dados
+                            pRegistro.getCampo("CNPJ_Logradouro").Valor = lCnpjDic["logradouro"];
+                            pRegistro.getCampo("CNPJ_Numero").Valor = lCnpjDic["numero"];
+                            pRegistro.getCampo("CNPJ_Complemento").Valor = lCnpjDic["complemento"];
+                            pRegistro.getCampo("CNPJ_Municipio").Valor = lCnpjDic["municipio"];
+                            pRegistro.getCampo("CNPJ_Bairro").Valor = lCnpjDic["bairro"];
+                            pRegistro.getCampo("CNPJ_UF").Valor = lCnpjDic["uf"];
+                            pRegistro.getCampo("CNPJ_CEP").Valor = lCnpjDic["cep"];
+                            pRegistro.getCampo("CNPJ_Email").Valor = lCnpjDic["email"];
+                            pRegistro.getCampo("CNPJ_Telefone").Valor = lCnpjDic["telefone"];
+                            pRegistro.getCampo("CNPJ_DataSituacao").Valor = lCnpjDic["data_situacao"];
+                            pRegistro.getCampo("CNPJ_UltimaAtualizacao").Valor = lCnpjDic["ultima_atualizacao"];
+                            pRegistro.getCampo("CNPJ_Status").Valor = lCnpjDic["status"];
+                            pRegistro.getCampo("CNPJ_Fantasia").Valor = lCnpjDic["fantasia"];
+                            pRegistro.getCampo("CNPJ_Efr").Valor = lCnpjDic["efr"];
+                            pRegistro.getCampo("CNPJ_MotivoSituacao").Valor = lCnpjDic["motivo_situacao"];
+                            pRegistro.getCampo("CNPJ_SituacaoEspecial").Valor = lCnpjDic["situacao_especial"];
+                            pRegistro.getCampo("CNPJ_DataSituacaoEspecial").Valor = lCnpjDic["data_situacao_especial"];
+                            pRegistro.getCampo("CNPJ_CapitalSocial").Valor = lCnpjDic["capital_social"];
+
+                            //Qsa	
+                            var qsaItems = serializer.Deserialize<List<QsaItem>>(lCnpjDic["qsa"]);
+                            Dictionary<string, string> lQsaDic = new Dictionary<string, string>();
+                            foreach (var qsaItem in qsaItems)
+                            {
+                                lQsaDic.Add(qsaItem.nome, qsaItem.qual);
+                            }
+
+                            string textoQsa = "";
+                            foreach (var parChaveValor in lQsaDic)
+                            {
+                                textoQsa += string.Format("{0}: {1}\n", parChaveValor.Key, parChaveValor.Value);
+                            }
+
+                            pRegistro.getCampo("CNPJ_Qsa").Valor = textoQsa;
+
+                            //Atividade Principal
+                            var atividadePrincipalItems = serializer.Deserialize<List<AtividadeItem>>(lCnpjDic["atividade_principal"]);
+                            Dictionary<string, string> lAtividadePrincipalDic = new Dictionary<string, string>();
+                            foreach (var atividadeItem in atividadePrincipalItems)
+                            {
+                                lAtividadePrincipalDic.Add(atividadeItem.code, atividadeItem.text);
+                            }
+
+                            string textoAtividadePrincipal = "";
+                            foreach (var parChaveValor in lAtividadePrincipalDic)
+                            {
+                                textoAtividadePrincipal += string.Format("{0}: {1}\n", parChaveValor.Key, parChaveValor.Value);
+                            }
+                            pRegistro.getCampo("CNPJ_AtividadePrincipal").Valor = textoAtividadePrincipal;
+
+                            //Atividades secundárias
+                            var atividadesSecundariasItems = serializer.Deserialize<List<AtividadeItem>>(lCnpjDic["atividades_secundarias"]);
+                            Dictionary<string, string> lAtividadesSecundariasDic = new Dictionary<string, string>();
+                            foreach (var atividadeItem in atividadesSecundariasItems)
+                            {
+                                lAtividadesSecundariasDic.Add(atividadeItem.code, atividadeItem.text);
+                            }
+
+                            string textoAtividadesSecundarias = "";
+                            foreach (var parChaveValor in lAtividadesSecundariasDic)
+                            {
+                                textoAtividadesSecundarias += string.Format("{0}: {1}\n", parChaveValor.Key, parChaveValor.Value);
+                            }
+                            pRegistro.getCampo("CNPJ_AtividadesSecundarias").Valor = textoAtividadesSecundarias;
+                        }
+                        else
+                        {
+                            throw new Exception("Falha ao obter os dados da URL: " + lUrl);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Ocorreu um erro inesperado: " + ex.Message);
+                }
+            }
+            catch (Exception pErro)
+            {
+                lRetorno = pErro.Message;
+            }
+
+       
+        }
+        catch (Exception pErro)
+        {
+            lRetorno = pErro.Message;
+        }
+
+        return lRetorno;
+    }
+
+    public class QsaItem
+    {
+        public string nome { get; set; }
+        public string qual { get; set; }
+    }
+
+    public class AtividadeItem
+    {
+        public string code { get; set; }
+        public string text { get; set; }
+    }
+}

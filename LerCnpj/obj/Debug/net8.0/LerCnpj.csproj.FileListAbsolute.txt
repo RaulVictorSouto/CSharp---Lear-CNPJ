@@ -1,0 +1,15 @@
+C:\Users\raulv\OneDrive\Área de Trabalho\3AScript\LerCnpj\bin\Debug\net8.0\LerCnpj.exe
+C:\Users\raulv\OneDrive\Área de Trabalho\3AScript\LerCnpj\bin\Debug\net8.0\LerCnpj.deps.json
+C:\Users\raulv\OneDrive\Área de Trabalho\3AScript\LerCnpj\bin\Debug\net8.0\LerCnpj.runtimeconfig.json
+C:\Users\raulv\OneDrive\Área de Trabalho\3AScript\LerCnpj\bin\Debug\net8.0\LerCnpj.dll
+C:\Users\raulv\OneDrive\Área de Trabalho\3AScript\LerCnpj\bin\Debug\net8.0\LerCnpj.pdb
+C:\Users\raulv\OneDrive\Área de Trabalho\3AScript\LerCnpj\obj\Debug\net8.0\LerCnpj.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\raulv\OneDrive\Área de Trabalho\3AScript\LerCnpj\obj\Debug\net8.0\LerCnpj.AssemblyInfoInputs.cache
+C:\Users\raulv\OneDrive\Área de Trabalho\3AScript\LerCnpj\obj\Debug\net8.0\LerCnpj.AssemblyInfo.cs
+C:\Users\raulv\OneDrive\Área de Trabalho\3AScript\LerCnpj\obj\Debug\net8.0\LerCnpj.csproj.CoreCompileInputs.cache
+C:\Users\raulv\OneDrive\Área de Trabalho\3AScript\LerCnpj\obj\Debug\net8.0\LerCnpj.sourcelink.json
+C:\Users\raulv\OneDrive\Área de Trabalho\3AScript\LerCnpj\obj\Debug\net8.0\LerCnpj.dll
+C:\Users\raulv\OneDrive\Área de Trabalho\3AScript\LerCnpj\obj\Debug\net8.0\refint\LerCnpj.dll
+C:\Users\raulv\OneDrive\Área de Trabalho\3AScript\LerCnpj\obj\Debug\net8.0\LerCnpj.pdb
+C:\Users\raulv\OneDrive\Área de Trabalho\3AScript\LerCnpj\obj\Debug\net8.0\LerCnpj.genruntimeconfig.cache
+C:\Users\raulv\OneDrive\Área de Trabalho\3AScript\LerCnpj\obj\Debug\net8.0\ref\LerCnpj.dll

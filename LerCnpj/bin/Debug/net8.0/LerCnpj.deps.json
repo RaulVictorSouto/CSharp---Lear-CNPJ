@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "LerCnpj/1.0.0": {
+        "runtime": {
+          "LerCnpj.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "LerCnpj/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
